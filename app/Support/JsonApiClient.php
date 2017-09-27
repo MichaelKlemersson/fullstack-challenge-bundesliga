@@ -6,11 +6,12 @@ use App\Support\Contracts\ApiClient;
 
 class JsonApiClient implements ApiClient
 {
-    public function fetch(string $url)
+    public function fetch(string $url, array $params = [])
     {
         $curlSession = curl_init();
 
-        curl_setopt($curlSession, CURLOPT_URL, $url);
+        curl_setopt($curlSession, CURLOPT_URL, $url . 
+            (isset($params['action']) ?: ''));
         curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curlSession, CURLOPT_HEADER, false);
         curl_setopt($curlSession, CURLOPT_HTTPGET, true);
@@ -19,6 +20,6 @@ class JsonApiClient implements ApiClient
         $response = curl_exec($curlSession);
         curl_close($curlSession);
 
-        return json_decode($response, true);
+        return $response;
     }
 }

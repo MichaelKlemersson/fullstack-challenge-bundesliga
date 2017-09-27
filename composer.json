@@ -1,14 +1,13 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
+    "name": "michaelklemersson/bundesliga-challenge",
+    "description": "code for full-stack challenge using laravel framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
     "require": {
         "php": ">=7.0.0",
         "fideloper/proxy": "~3.3",
-        "laravel/framework": "5.5.*",
-        "laravel/tinker": "~1.0"
+        "laravel/framework": "5.5.*"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
@@ -48,10 +47,9 @@
             "@php artisan package:discover"
         ],
         "test-all": "phpunit",
+        "test-all-testdox": "phpunit --testdox",
         "test-unit": "phpunit UnitTest --",
-        "test-unit-textdox": [
-            "phpunit --testdox UnitTest --"
-        ]
+        "test-unit-testdox": "phpunit --testdox UnitTest --"
     },
     "config": {
         "preferred-install": "dist",
