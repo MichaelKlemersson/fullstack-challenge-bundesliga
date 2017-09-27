@@ -4,6 +4,9 @@ namespace App\Support;
 
 use App\Support\Contracts\ApiClient;
 
+/**
+ * Class JsonApiClient
+ */
 class JsonApiClient implements ApiClient
 {
     public function fetch(string $url, array $params = [])
@@ -11,7 +14,7 @@ class JsonApiClient implements ApiClient
         $curlSession = curl_init();
 
         curl_setopt($curlSession, CURLOPT_URL, $url . 
-            (isset($params['action']) ?: ''));
+            (isset($params['action']) ? $params['action'] : ''));
         curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curlSession, CURLOPT_HEADER, false);
         curl_setopt($curlSession, CURLOPT_HTTPGET, true);

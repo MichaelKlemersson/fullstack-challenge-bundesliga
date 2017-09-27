@@ -13,11 +13,11 @@ class SoapApiClient implements ApiClient
             ->getSoapClient($url)
             ->__soapCall(
                 $params['action'],
-                isset($params['params']) ?: []
+                isset($params['params']) ? $params['params'] : []
             );
     }
 
-    private function getSoapClient(string $url)
+    protected function getSoapClient(string $url)
     {
         $opts = array(
             'http' => array(
