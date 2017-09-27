@@ -3,10 +3,11 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use App\Support\SoapApiClient;
 
 class SoapApiClientTest extends TestCase
 {
-    protected $apiUri = 'https://www.openligadb.de/api/getmatchdata/bl1';
+    protected $apiUri = '';
 
     public function testFetchContentFromJsonApiCclient()
     {

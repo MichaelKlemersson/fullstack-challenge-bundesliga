@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use App\Support\JsonApiClient;
 
 class JsonApiClientTest extends TestCase
 {
@@ -15,5 +16,6 @@ class JsonApiClientTest extends TestCase
         $resultContent = $apiClient->fetch($this->apiUri);
 
         $this->assertNotNull($resultContent);
+        $this->assertInternalType('array', $resultContent);
     }
 }
