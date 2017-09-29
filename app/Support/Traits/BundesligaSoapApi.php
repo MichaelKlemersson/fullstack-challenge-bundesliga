@@ -3,15 +3,25 @@
 namespace App\Support\Traits;
 
 use App\Support\SoapApiClient;
-use App\Support\Api\Resopnse\ParseSoapResponse;
+use App\Support\Api\Response\ParseSoapResponse;
 
 /**
- * Trait BundesligaSoapApi 
+ * Trait BundesligaSoapApi
  */
 trait BundesligaSoapApi
 {
+    /**
+     * Endpoint to the soap requests
+     *
+     * @var string
+     */
     protected $soapApiUri = 'https://www.OpenLigaDB.de/Webservices/Sportsdata.asmx';
 
+    /**
+     * Return the client to be used in requests
+     *
+     * @return SoapApiClient
+     */
     protected function getSoapClient()
     {
         return new SoapApiClient();
@@ -25,7 +35,9 @@ trait BundesligaSoapApi
      */
     protected function parseSoapResponse($response)
     {
-        return array_shift((new ParseSoapResponse())->parse($response));
+        $arrayResponse = (new ParseSoapResponse())->parse($response);
+
+        return array_shift($arrayResponse);
     }
 
     /**
@@ -39,8 +51,30 @@ trait BundesligaSoapApi
             $this
                 ->getSoapClient()
                 ->fetch($this->soapApiUri, [
-                    'action' => "GetAvailSports"
+                    'action' => 'GetAvailSports'
+                ])
+        )['Sport'];
+    }
+
+    /**
+     * Return all available leagues from a sport
+     *
+     * @param int $sportId
+     * @return array
+     */
+    public function getLeaguesFromSport(int $sportId)
+    {
+        $result = $this->parseSoapResponse(
+            $this
+                ->getSoapClient()
+                ->fetch($this->soapApiUri, [
+                    'action' => 'GetAvailLeaguesBySports',
+                    'params' => [[
+                        'sportID' => $sportId
+                    ]]
                 ])
         );
+
+        return array_shift($result);
     }
 }

@@ -6,12 +6,22 @@ use App\Support\JsonApiClient;
 use App\Support\Api\Response\ParseJsonResponse;
 
 /**
- * Trait BundesligaJsonApi Helpers 
+ * Trait BundesligaJsonApi Helpers
  */
 trait BundesligaJsonApi
 {
+    /**
+     * Endpoint to the soap requests
+     *
+     * @var string
+     */
     protected $jsonApiUri = 'https://www.openligadb.de/api/';
 
+    /**
+     * Return the client to be used in requests
+     *
+     * @return SoapApiClient
+     */
     protected function getJsonClient()
     {
         return new JsonApiClient();

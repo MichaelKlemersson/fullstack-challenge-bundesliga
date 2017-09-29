@@ -5,6 +5,9 @@ namespace App\Support;
 use App\Support\Contracts\ApiClient;
 use SoapClient;
 
+/**
+ * Class SoapApiClient
+ */
 class SoapApiClient implements ApiClient
 {
     public function fetch(string $url, array $params = [])
@@ -17,6 +20,12 @@ class SoapApiClient implements ApiClient
             );
     }
 
+    /**
+     * Return a new SoapClient
+     *
+     * @param string $url
+     * @return SoapClient
+     */
     protected function getSoapClient(string $url)
     {
         $opts = array(

@@ -13,7 +13,7 @@ class JsonApiClient implements ApiClient
     {
         $curlSession = curl_init();
 
-        curl_setopt($curlSession, CURLOPT_URL, $url . 
+        curl_setopt($curlSession, CURLOPT_URL, $url .
             (isset($params['action']) ? $params['action'] : ''));
         curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curlSession, CURLOPT_HEADER, false);

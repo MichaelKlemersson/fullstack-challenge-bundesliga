@@ -51,15 +51,30 @@ class BundesligaApiServiceTest extends TestCase
 
         $this->assertNotNull($response);
         $this->assertTrue(count($response) > 0);
+        $this->assertArrayHasKey('sportsID', $response[0]);
     }
 
-    // public function testFetchLeaguesFromSport()
-    // {
-    //     $apiService = new BundesligaApiService();
-    //     $sports = $apiService->getAvailabeSports();
-    //     $response = $apiService->getLeaguesFromSport($sports[0]);
+    public function testFetchLeaguesFromSport()
+    {
+        $apiService = new BundesligaApiService();
+        $sports = $apiService->getAvailabeSports();
+        $response = $apiService->getLeaguesFromSport($sports[0]['sportsID']);
 
-    //     $this->assertNotNull($response);
-    //     $this->assertArrayHasKey('LeagueID', $response[0]);
-    // }
+        $this->assertNotNull($response);
+        $this->assertArrayHasKey('leagueID', $response[0]);
+    }
+
+    public function testFetchTeamResults()
+    {
+        $apiService = new BundesligaApiService();
+        // $teams = $apiService->getAllTeamsFromLeague($this->league, $this->session);
+        // $randomTeam = $teams[(random_int(count($teams)))];
+
+        $teamResults = $apiService->getTeamResultsFromSession($this->league, $this->session, $this->teamId);
+        $firstResult = array_shift($teamResults);
+        $this->assertNotNull($teamResults);
+        $this->assertTrue($firstResult['MatchIsFinished']);
+        $this->assertArrayHasKey('LeagueId', $firstResult);
+        $this->assertEquals($this->leagueId, $firstResult['LeagueId']);
+    }
 }
