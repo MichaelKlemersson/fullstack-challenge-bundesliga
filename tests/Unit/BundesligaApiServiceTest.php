@@ -77,4 +77,22 @@ class BundesligaApiServiceTest extends TestCase
         $this->assertArrayHasKey('LeagueId', $firstResult);
         $this->assertEquals($this->leagueId, $firstResult['LeagueId']);
     }
+
+    public function testFetchCurrentGroupFromLeague()
+    {
+        $apiService = new BundesligaApiService();
+        $group = $apiService->getCurrentLeagueGroup($this->league);
+
+        $this->assertNotNull($group);
+        $this->assertArrayHasKey('GroupID', $group);
+    }
+
+    public function testFetchAvailableGroupsFromLeague()
+    {
+        $apiService = new BundesligaApiService();
+        $groups = $apiService->getLeagueGroups($this->league, $this->session);
+
+        $this->assertNotNull($groups);
+        $this->assertArrayHasKey('GroupID', $groups[0]);
+    }
 }

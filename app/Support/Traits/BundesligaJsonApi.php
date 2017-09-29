@@ -92,4 +92,39 @@ trait BundesligaJsonApi
                 ])
         );
     }
+
+    /**
+     * Return the current group of league
+     *
+     * @param string $league
+     * @return array
+     */
+    public function getCurrentLeagueGroup(string $league)
+    {
+        return $this->parseJsonResponse(
+            $this
+                ->getJsonClient()
+                ->fetch($this->jsonApiUri, [
+                    'action' => "getcurrentgroup/{$league}"
+                ])
+        );
+    }
+
+    /**
+     * Return the available groups of a league
+     *
+     * @param string $league
+     * @param string $session
+     * @return array
+     */
+    public function getLeagueGroups(string $league, string $session)
+    {
+        return $this->parseJsonResponse(
+            $this
+                ->getJsonClient()
+                ->fetch($this->jsonApiUri, [
+                    'action' => "getavailablegroups/{$league}/{$session}"
+                ])
+        );
+    }
 }
