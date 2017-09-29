@@ -23,9 +23,24 @@ class SportsController extends Controller
         $cacheKey = "available-sports";
 
         if (!$this->isCached($cacheKey)) {
-            $this->putInCache($cacheKey, $this->apiService->getAvailabeSports());
+            $this->putInCache($cacheKey, $this->apiService->getAvailabeSports(), 30);
         }
 
+        return response()->json($this->getFromCache($cacheKey));
+    }
+
+    public function defaultSport()
+    {
+        $cacheKey = "default-sport";
+
+        if (!$this->isCached($cacheKey)) {
+            $this->putInCache($cacheKey, collect($this->apiService->getAvailabeSports(), 60)
+                ->filter(function ($sport) {
+                    return $sport['sportsID'] == 1;
+                })
+                ->first());
+        }
+            
         return response()->json($this->getFromCache($cacheKey));
     }
 }

@@ -7,7 +7,16 @@
 
 require('./bootstrap');
 
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import { sync } from 'vuex-router-sync';
+
 window.Vue = require('vue');
+
+Vue.use(VueRouter);
+
+import router from './router';
+import store from './vuex';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -15,8 +24,19 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
+Vue.config.debug = true;
+Vue.config.devtools = true;
+
+import AppMain from './components/AppMain.vue'
+
+sync(store, router)
 
 const app = new Vue({
-    el: '#app'
-});
+    name: 'BundesligaChallenge',
+    components: {
+        AppMain
+    },
+    store,
+    router,
+    render: h => h(AppMain)
+}).$mount('#app');

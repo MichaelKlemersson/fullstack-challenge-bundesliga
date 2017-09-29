@@ -77,4 +77,24 @@ trait BundesligaSoapApi
 
         return array_shift($result);
     }
+    
+    /**
+     * Return the next match of a league
+     *
+     * @param string $league
+     * @return array
+     */
+    public function getNextLeagueMatch(string $league)
+    {
+        return $this->parseSoapResponse(
+            $this
+                ->getSoapClient()
+                ->fetch($this->soapApiUri, [
+                    'action' => 'GetNextMatch',
+                    'params' => [[
+                        'leagueShortcut' => $league
+                    ]]
+                ])
+        );
+    }
 }
