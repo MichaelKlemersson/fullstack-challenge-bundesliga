@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\BundesligaApiService;
 use App\Support\Traits\CacheApi;
+use App\Support\Traits\ResponseHelper;
 
 class SportsController extends Controller
 {
-    use CacheApi;
+    use CacheApi, ResponseHelper;
 
     private $apiService;
 
@@ -26,7 +27,7 @@ class SportsController extends Controller
             $this->putInCache($cacheKey, $this->apiService->getAvailabeSports(), 30);
         }
 
-        return response()->json($this->getFromCache($cacheKey));
+        return $this->makeApiResponse($this->getFromCache($cacheKey));
     }
 
     public function defaultSport()
@@ -41,6 +42,6 @@ class SportsController extends Controller
                 ->first());
         }
             
-        return response()->json($this->getFromCache($cacheKey));
+        return $this->makeApiResponse($this->getFromCache($cacheKey));
     }
 }

@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\BundesligaApiService;
 use App\Support\Traits\CacheApi;
+use App\Support\Traits\ResponseHelper;
 
 class LeagueController extends Controller
 {
-    use CacheApi;
+    use CacheApi, ResponseHelper;
 
     private $apiService;
 
@@ -27,10 +28,13 @@ class LeagueController extends Controller
         $cacheKey = "leagues-from-sport-" . $request->input('sport');
         
         if (!$this->isCached($cacheKey)) {
-            $this->putInCache($cacheKey, $this->apiService->getLeaguesFromSport($request->input('sport')), 10);
+            $this->putInCache($cacheKey, $this->apiService->getLeaguesFromSport(
+                $request->input('sport'),
+                $request->input('session', '')
+            ), 10);
         }
 
-        return response()->json($this->getFromCache($cacheKey));
+        return $this->makeApiResponse($this->getFromCache($cacheKey));
     }
 
     public function allMatchesFromLeague(Request $request)
@@ -39,12 +43,9 @@ class LeagueController extends Controller
             'league' => 'required',
         ]);
 
-        return response()->json(
-            $this->apiService->getAllMatchesFromLeague(
-                $request->input('league'),
-                $request->input('session', ''),
-                $request->input('group', '')
-            )
+        return $this->makeApiResponse(
+            $this->apiService->getAllMatchesFromLeague($request->input('league')),
+            true
         );
     }
 
@@ -82,6 +83,30 @@ class LeagueController extends Controller
         return response()->json($this->getFromCache($cacheKey));
     }
 
+    public function upComingMatchesFromLeague(Request $request)
+    {
+        $request->validate([
+            'league' => 'required',
+            'session' => 'required',
+        ]);
+
+        $cacheKey = "upcoming-league-matches-" . $request->input('league') . '-' . $request->input('session');
+        
+        if (!$this->isCached($cacheKey)) {
+            $currentLeagueGroup = $this->apiService->getCurrentLeagueGroup($request->input('league'));
+
+            if ($currentLeagueGroup['GroupID']) {
+                $this->putInCache($cacheKey, $this->apiService->getAllMatchesFromLeague(
+                    $request->input('league'),
+                    $request->input('session'),
+                    $currentLeagueGroup['GroupOrderID']
+                ), 30);
+            }
+        }
+
+        return $this->makeApiResponse($this->getFromCache($cacheKey, []));
+    }
+
     public function nextMatchFromLeague(Request $request)
     {
         $request->validate([
@@ -89,7 +114,7 @@ class LeagueController extends Controller
         ]);
 
         return response()->json(
-            $this->apiService->getNextLeagueMatch(
+            $this->apiService->getAllMatchesFromLeague(
                 $request->input('league')
             )
         );

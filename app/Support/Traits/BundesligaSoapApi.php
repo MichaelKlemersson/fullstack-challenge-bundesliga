@@ -60,9 +60,10 @@ trait BundesligaSoapApi
      * Return all available leagues from a sport
      *
      * @param int $sportId
+     * @param string $session
      * @return array
      */
-    public function getLeaguesFromSport(int $sportId)
+    public function getLeaguesFromSport(int $sportId, string $session = '')
     {
         $result = $this->parseSoapResponse(
             $this
@@ -75,7 +76,15 @@ trait BundesligaSoapApi
                 ])
         );
 
-        return array_shift($result);
+        $result = array_shift($result);
+
+        if ($session) {
+            $result = array_filter($result, function ($league) use ($session) {
+                return ($league['leagueSaison'] === $session);
+            });
+        }
+
+        return array_values($result);
     }
     
     /**

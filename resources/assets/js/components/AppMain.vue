@@ -4,23 +4,21 @@
 
         <div class="container">
             <router-view></router-view>
+
+            <BcLoader></BcLoader>
         </div>
     </div>
 </template>
 
 <script>
-    import BcRootHeader from './root/BcRootHeader.vue'
+    import BcRootHeader from './root/BcRootHeader'
+    import BcLoader from './root/BcLoader'
     import axios from 'axios'
 
     export default {
         components: {
-            BcRootHeader
-        },
-
-        mounted() {
-            // axios.get('/sports/default').then(response => {
-            //     this.$store.commit('setDefaultSport', response.data)
-            // })
+            BcRootHeader,
+            BcLoader
         }
     }
 </script>

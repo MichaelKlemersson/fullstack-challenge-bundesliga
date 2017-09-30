@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
+        showLoading: true,
         defaultSport: null,
         currentLeague: null,
         currentTeam: null,
@@ -29,6 +30,10 @@ const store = new Vuex.Store({
         
         setCurrentSport: (state, sport) => {
             state.currentSport = sport
+        },
+
+        showLoading: (state, show) => {
+            state.showLoading = show
         }
     }
 })

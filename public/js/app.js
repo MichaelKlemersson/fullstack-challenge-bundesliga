@@ -787,10 +787,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex_router_sync__ = __webpack_require__(73);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex_router_sync___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuex_router_sync__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__router__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__vuex__ = __webpack_require__(71);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_AppMain_vue__ = __webpack_require__(60);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_AppMain_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_AppMain_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_promise_queue__ = __webpack_require__(84);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_promise_queue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_promise_queue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__router__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__vuex__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_AppMain_vue__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_AppMain_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_AppMain_vue__);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -803,6 +805,9 @@ __webpack_require__(10);
 
 
 
+
+
+__WEBPACK_IMPORTED_MODULE_3_promise_queue___default.a.configure(window.Promise);
 
 window.Vue = __webpack_require__(35);
 
@@ -822,17 +827,17 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.config.devtools = true;
 
 
 
-Object(__WEBPACK_IMPORTED_MODULE_2_vuex_router_sync__["sync"])(__WEBPACK_IMPORTED_MODULE_4__vuex__["a" /* default */], __WEBPACK_IMPORTED_MODULE_3__router__["a" /* default */]);
+Object(__WEBPACK_IMPORTED_MODULE_2_vuex_router_sync__["sync"])(__WEBPACK_IMPORTED_MODULE_5__vuex__["a" /* default */], __WEBPACK_IMPORTED_MODULE_4__router__["a" /* default */]);
 
 var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
   name: 'BundesligaChallenge',
   components: {
-    AppMain: __WEBPACK_IMPORTED_MODULE_5__components_AppMain_vue___default.a
+    AppMain: __WEBPACK_IMPORTED_MODULE_6__components_AppMain_vue___default.a
   },
-  store: __WEBPACK_IMPORTED_MODULE_4__vuex__["a" /* default */],
-  router: __WEBPACK_IMPORTED_MODULE_3__router__["a" /* default */],
+  store: __WEBPACK_IMPORTED_MODULE_5__vuex__["a" /* default */],
+  router: __WEBPACK_IMPORTED_MODULE_4__router__["a" /* default */],
   render: function render(h) {
-    return h(__WEBPACK_IMPORTED_MODULE_5__components_AppMain_vue___default.a);
+    return h(__WEBPACK_IMPORTED_MODULE_6__components_AppMain_vue___default.a);
   }
 }).$mount('#app');
 
@@ -42030,7 +42035,88 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 /* 41 */,
-/* 42 */,
+/* 42 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
 /* 43 */,
 /* 44 */,
 /* 45 */,
@@ -42321,46 +42407,16 @@ var staticRenderFns = [
     return _c("ul", { staticClass: "nav navbar-nav" }, [
       _c("li", { staticClass: "active" }, [
         _c("a", { attrs: { href: "#" } }, [
-          _vm._v("Home "),
+          _vm._v("Next matches "),
           _c("span", { staticClass: "sr-only" }, [_vm._v("(current)")])
         ])
       ]),
       _vm._v(" "),
-      _c("li", { staticClass: "dropdown" }, [
-        _c(
-          "a",
-          {
-            staticClass: "dropdown-toggle",
-            attrs: {
-              href: "#",
-              "data-toggle": "dropdown",
-              role: "button",
-              "aria-haspopup": "true",
-              "aria-expanded": "false"
-            }
-          },
-          [
-            _vm._v("\n            Leagues "),
-            _c("span", { staticClass: "caret" })
-          ]
-        ),
-        _vm._v(" "),
-        _c("ul", { staticClass: "dropdown-menu" }, [
-          _c("li", [
-            _c("a", { attrs: { href: "#" } }, [
-              _c("i", { staticClass: "fa fa-list" }),
-              _vm._v(" All leagues")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("li", [
-            _c("a", { attrs: { href: "#" } }, [
-              _c("i", { staticClass: "fa fa-shield" }),
-              _vm._v(" Teams")
-            ])
-          ])
-        ])
-      ])
+      _c("li", {}, [_c("a", { attrs: { href: "#" } }, [_vm._v("Group 1")])]),
+      _vm._v(" "),
+      _c("li", {}, [_c("a", { attrs: { href: "#" } }, [_vm._v("Group 2")])]),
+      _vm._v(" "),
+      _c("li", {}, [_c("a", { attrs: { href: "#" } }, [_vm._v("Group 3")])])
     ])
   }
 ]
@@ -42428,10 +42484,12 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_BcRootHeader_vue__ = __webpack_require__(50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_BcRootHeader_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__root_BcRootHeader_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_BcRootHeader__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_BcRootHeader___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__root_BcRootHeader__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__root_BcLoader__ = __webpack_require__(77);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__root_BcLoader___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__root_BcLoader__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_axios__);
 //
 //
 //
@@ -42442,19 +42500,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
-        BcRootHeader: __WEBPACK_IMPORTED_MODULE_0__root_BcRootHeader_vue___default.a
-    },
-
-    mounted: function mounted() {
-        // axios.get('/sports/default').then(response => {
-        //     this.$store.commit('setDefaultSport', response.data)
-        // })
+        BcRootHeader: __WEBPACK_IMPORTED_MODULE_0__root_BcRootHeader___default.a,
+        BcLoader: __WEBPACK_IMPORTED_MODULE_1__root_BcLoader___default.a
     }
 });
 
@@ -42472,7 +42528,12 @@ var render = function() {
     [
       _c("BcRootHeader"),
       _vm._v(" "),
-      _c("div", { staticClass: "container" }, [_c("router-view")], 1)
+      _c(
+        "div",
+        { staticClass: "container" },
+        [_c("router-view"), _vm._v(" "), _c("BcLoader")],
+        1
+      )
     ],
     1
   )
@@ -45038,15 +45099,19 @@ var routes = [{
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(87)
+}
 var normalizeComponent = __webpack_require__(37)
 /* script */
 var __vue_script__ = __webpack_require__(70)
 /* template */
-var __vue_template__ = __webpack_require__(69)
+var __vue_template__ = __webpack_require__(89)
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = null
+var __vue_scopeId__ = "data-v-07eab68b"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
@@ -45136,42 +45201,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 69 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { attrs: { id: "next-matches" } },
-    _vm._l(_vm.leagues, function(league) {
-      return _c("div", { staticClass: "col-lg-4 col-sm-6 col-xs-12" }, [
-        _c("div", { staticClass: "panel panel-default" }, [
-          _c("div", { staticClass: "panel-heading" }, [
-            _c("strong", [_vm._v(_vm._s(league.leagueName))])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "panel-body" }, [
-            _vm._v("\n                Panel content\n            ")
-          ])
-        ])
-      ])
-    })
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-07eab68b", module.exports)
-  }
-}
-
-/***/ }),
+/* 69 */,
 /* 70 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -45179,6 +45209,10 @@ if (false) {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_promise_queue__ = __webpack_require__(84);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_promise_queue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_promise_queue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_lodash__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_lodash__);
 //
 //
 //
@@ -45193,6 +45227,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
@@ -45207,17 +45270,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var _this = this;
 
         this.getCurrentSport(function (sport) {
-            __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/leagues', { params: { sport: sport.sportsID } }).then(function (response) {
+            __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/leagues', {
+                params: {
+                    sport: sport.sportsID,
+                    session: _this.getCurrentSession()
+                }
+            }).then(function (response) {
                 if (response.data.length) {
-                    var leagues = response.data.map(function (item) {
-                        // axios.get('/leagues/matches/next', { params: { league: item.leagueShortcut } }).then(response => {
-                        //     item.nextMatch = response.data
-                        // })
+                    var queueNextMatches = new __WEBPACK_IMPORTED_MODULE_1_promise_queue___default.a(2, response.data.length);
+                    var _self = _this;
 
-                        return item;
+                    response.data.forEach(function (league, index) {
+                        if (Object(__WEBPACK_IMPORTED_MODULE_2_lodash__["indexOf"])(['bl1', 'bl2', 'bl3'], league.leagueShortcut) === -1) {
+                            return;
+                        }
+                        queueNextMatches.add(function () {
+                            var deferred = $.Deferred();
+                            __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/leagues/matches/upcoming', {
+                                params: {
+                                    league: league.leagueShortcut,
+                                    session: league.leagueSaison
+                                }
+                            }).then(function (response) {
+                                if (response.data.matchID !== -1) {
+                                    league.nextMatches = response.data;
+                                    _self.leagues.push(league);
+                                }
+                                deferred.resolve();
+                            });
+                            return deferred.promise();
+                        });
                     });
 
-                    _this.leagues = leagues;
+                    _this.$store.commit('showLoading', false);
                 }
             });
         });
@@ -45235,6 +45320,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     callback(_this2.$store.state.currentSport);
                 });
             }
+        },
+        getCurrentSession: function getCurrentSession() {
+            var now = new Date();
+
+            return now.getMonth() <= 5 ? now.getFullYear() - 1 : now.getFullYear();
         }
     }
 });
@@ -45254,6 +45344,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 
 var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     state: {
+        showLoading: true,
         defaultSport: null,
         currentLeague: null,
         currentTeam: null,
@@ -45278,6 +45369,10 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
 
         setCurrentSport: function setCurrentSport(state, sport) {
             state.currentSport = sport;
+        },
+
+        showLoading: function showLoading(state, show) {
+            state.showLoading = show;
         }
     }
 });
@@ -46274,6 +46369,774 @@ function cloneRoute (to, from) {
 }
 
 
+
+/***/ }),
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(80)
+}
+var normalizeComponent = __webpack_require__(37)
+/* script */
+var __vue_script__ = __webpack_require__(78)
+/* template */
+var __vue_template__ = __webpack_require__(79)
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/root/BcLoader.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] BcLoader.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-41b68745", Component.options)
+  } else {
+    hotAPI.reload("data-v-41b68745", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 78 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'BcLoader',
+
+    computed: {
+        showLoading: function showLoading() {
+            return this.$store.state.showLoading;
+        }
+    }
+});
+
+/***/ }),
+/* 79 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "text-center fake-loader" }, [
+    _c("div", { staticClass: "clearfix" }),
+    _vm._v(" "),
+    _c("i", {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.showLoading,
+          expression: "showLoading"
+        }
+      ],
+      staticClass: "fa fa-refresh fa-spin fa-3x fa-fw margin-bottom"
+    })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-41b68745", module.exports)
+  }
+}
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(81);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(82)("21052238", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-41b68745\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./BcLoader.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-41b68745\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./BcLoader.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(42)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.fake-loader{\n    padding: 40px 0;\n    margin: 20px 0;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
+*/
+
+var hasDocument = typeof document !== 'undefined'
+
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
+}
+
+var listToStyles = __webpack_require__(83)
+
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
+  }
+*/}
+
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
+
+module.exports = function (parentId, list, _isProduction) {
+  isProduction = _isProduction
+
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
+    }
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
+    } else {
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
+      }
+    }
+  }
+}
+
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[data-vue-ssr-id~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
+  }
+}
+
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports) {
+
+/**
+ * Translates the list format produced by css-loader into something
+ * easier to manipulate.
+ */
+module.exports = function listToStyles (parentId, list) {
+  var styles = []
+  var newStyles = {}
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i]
+    var id = item[0]
+    var css = item[1]
+    var media = item[2]
+    var sourceMap = item[3]
+    var part = {
+      id: parentId + ':' + i,
+      css: css,
+      media: media,
+      sourceMap: sourceMap
+    }
+    if (!newStyles[id]) {
+      styles.push(newStyles[id] = { id: id, parts: [part] })
+    } else {
+      newStyles[id].parts.push(part)
+    }
+  }
+  return styles
+}
+
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = Object({"NODE_ENV":"development"}).PROMISE_QUEUE_COVERAGE ?
+    __webpack_require__(85) :
+    __webpack_require__(86);
+
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/* global define, Promise */
+(function (root, factory) {
+    'use strict';
+    if (typeof module === 'object' && module.exports && "function" === 'function') {
+        // CommonJS
+        module.exports = factory();
+    } else if (true) {
+        // AMD. Register as an anonymous module.
+        !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {
+        // Browser globals
+        root.Queue = factory();
+    }
+})
+(this, function () {
+    'use strict';
+
+    /**
+     * @return {Object}
+     */
+    var LocalPromise = typeof Promise !== 'undefined' ? Promise : function () {
+        return {
+            then: function () {
+                throw new Error('Queue.configure() before use Queue');
+            }
+        };
+    };
+
+    var noop = function () {};
+
+    /**
+     * @param {*} value
+     * @returns {LocalPromise}
+     */
+    var resolveWith = function (value) {
+        if (value && typeof value.then === 'function') {
+            return value;
+        }
+
+        return new LocalPromise(function (resolve) {
+            resolve(value);
+        });
+    };
+
+    /**
+     * It limits concurrently executed promises
+     *
+     * @param {Number} [maxPendingPromises=Infinity] max number of concurrently executed promises
+     * @param {Number} [maxQueuedPromises=Infinity]  max number of queued promises
+     * @constructor
+     *
+     * @example
+     *
+     * var queue = new Queue(1);
+     *
+     * queue.add(function () {
+     *     // resolve of this promise will resume next request
+     *     return downloadTarballFromGithub(url, file);
+     * })
+     * .then(function (file) {
+     *     doStuffWith(file);
+     * });
+     *
+     * queue.add(function () {
+     *     return downloadTarballFromGithub(url, file);
+     * })
+     * // This request will be paused
+     * .then(function (file) {
+     *     doStuffWith(file);
+     * });
+     */
+    function Queue(maxPendingPromises, maxQueuedPromises) {
+        this.pendingPromises = 0;
+        this.maxPendingPromises = typeof maxPendingPromises !== 'undefined' ? maxPendingPromises : Infinity;
+        this.maxQueuedPromises = typeof maxQueuedPromises !== 'undefined' ? maxQueuedPromises : Infinity;
+        this.queue = [];
+    }
+
+    /**
+     * Defines promise promiseFactory
+     * @param {Function} GlobalPromise
+     */
+    Queue.configure = function (GlobalPromise) {
+        LocalPromise = GlobalPromise;
+    };
+
+    /**
+     * @param {Function} promiseGenerator
+     * @return {LocalPromise}
+     */
+    Queue.prototype.add = function (promiseGenerator) {
+        var self = this;
+        return new LocalPromise(function (resolve, reject, notify) {
+            // Do not queue to much promises
+            if (self.queue.length >= self.maxQueuedPromises) {
+                reject(new Error('Queue limit reached'));
+                return;
+            }
+
+            // Add to queue
+            self.queue.push({
+                promiseGenerator: promiseGenerator,
+                resolve: resolve,
+                reject: reject,
+                notify: notify || noop
+            });
+
+            self._dequeue();
+        });
+    };
+
+    /**
+     * Number of simultaneously running promises (which are resolving)
+     *
+     * @return {number}
+     */
+    Queue.prototype.getPendingLength = function () {
+        return this.pendingPromises;
+    };
+
+    /**
+     * Number of queued promises (which are waiting)
+     *
+     * @return {number}
+     */
+    Queue.prototype.getQueueLength = function () {
+        return this.queue.length;
+    };
+
+    /**
+     * @returns {boolean} true if first item removed from queue
+     * @private
+     */
+    Queue.prototype._dequeue = function () {
+        var self = this;
+        if (this.pendingPromises >= this.maxPendingPromises) {
+            return false;
+        }
+
+        // Remove from queue
+        var item = this.queue.shift();
+        if (!item) {
+            return false;
+        }
+
+        try {
+            this.pendingPromises++;
+
+            resolveWith(item.promiseGenerator())
+            // Forward all stuff
+                .then(function (value) {
+                    // It is not pending now
+                    self.pendingPromises--;
+                    // It should pass values
+                    item.resolve(value);
+                    self._dequeue();
+                }, function (err) {
+                    // It is not pending now
+                    self.pendingPromises--;
+                    // It should not mask errors
+                    item.reject(err);
+                    self._dequeue();
+                }, function (message) {
+                    // It should pass notifications
+                    item.notify(message);
+                });
+        } catch (err) {
+            self.pendingPromises--;
+            item.reject(err);
+            self._dequeue();
+
+        }
+
+        return true;
+    };
+
+    return Queue;
+});
+
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(88);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(82)("e04070e0", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-07eab68b\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./BcNextMatches.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-07eab68b\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./BcNextMatches.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(42)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.link-match[data-v-07eab68b]{\n    display: block;\n    padding: 3px 0;\n    text-decoration: none;\n    cursor: pointer;\n}\n.team-icon[data-v-07eab68b]{\n    max-width: 20px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "row", attrs: { id: "next-matches" } },
+    _vm._l(_vm.leagues, function(league) {
+      return _c("div", { staticClass: "col-md-4 col-xs-12" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-heading" }, [
+            _c("strong", [_vm._v(_vm._s(league.leagueName))])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body text-center" }, [
+            _c("i", {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: league.nextMatches === undefined,
+                  expression: "league.nextMatches === undefined"
+                }
+              ],
+              staticClass: "fa fa-refresh fa-spin fa-3x fa-fw margin-bottom"
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: league.nextMatches !== undefined,
+                    expression: "league.nextMatches !== undefined"
+                  }
+                ]
+              },
+              _vm._l(league.nextMatches, function(match) {
+                return _c("a", { staticClass: "link-match" }, [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(match.Team1.TeamName) +
+                      "\n                        "
+                  ),
+                  _c("img", {
+                    staticClass: "team-icon",
+                    attrs: { src: match.Team1.TeamIconUrl, alt: "" }
+                  }),
+                  _vm._v(
+                    "\n                        x\n                        "
+                  ),
+                  _c("img", {
+                    staticClass: "team-icon",
+                    attrs: { src: match.Team2.TeamIconUrl, alt: "" }
+                  }),
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(match.Team2.TeamName) +
+                      "\n                        "
+                  ),
+                  _c("br")
+                ])
+              })
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: league.nextMatches !== undefined,
+                  expression: "league.nextMatches !== undefined"
+                }
+              ],
+              staticClass: "panel-footer text-center"
+            },
+            [_vm._m(0, true)]
+          )
+        ])
+      ])
+    })
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { attrs: { href: "" } }, [
+      _vm._v("See more content "),
+      _c("i", { staticClass: "fa fa-arrow-right" })
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-07eab68b", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

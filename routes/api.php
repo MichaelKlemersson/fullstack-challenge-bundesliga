@@ -5,6 +5,7 @@ Route::prefix('v1')->namespace('V1')->group(function () {
         Route::get('/', 'LeagueController@allLeaguesFromSport')->name('leagues.allFromSport');
         Route::get('/matches', 'LeagueController@allMatchesFromLeague')->name('leagues.allMatches');
         Route::get('/matches/next', 'LeagueController@nextMatchFromLeague')->name('leagues.nextMatch');
+        Route::get('/matches/upcoming', 'LeagueController@upComingMatchesFromLeague')->name('leagues.upcomingMatch');
     });
 
     Route::prefix('teams')->group(function () {

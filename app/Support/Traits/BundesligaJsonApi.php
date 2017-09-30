@@ -61,16 +61,16 @@ trait BundesligaJsonApi
      *
      * @param string $league
      * @param string $session
-     * @param string $game
+     * @param string $group
      * @return array
      */
-    public function getAllMatchesFromLeague(string $league, string $session = '', string $game = '')
+    public function getAllMatchesFromLeague(string $league, string $session = '', string $group = '')
     {
         return $this->parseJsonResponse(
             $this
                 ->getJsonClient()
                 ->fetch($this->jsonApiUri, [
-                    'action' => "getmatchdata/{$league}/{$session}/{$game}"
+                    'action' => "getmatchdata/{$league}/{$session}/{$group}"
                 ])
         );
     }

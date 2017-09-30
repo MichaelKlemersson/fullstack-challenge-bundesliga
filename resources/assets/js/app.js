@@ -10,6 +10,9 @@ require('./bootstrap');
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { sync } from 'vuex-router-sync';
+import Queue from 'promise-queue';
+
+Queue.configure(window.Promise)
 
 window.Vue = require('vue');
 
