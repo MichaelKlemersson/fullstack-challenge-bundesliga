@@ -3,7 +3,26 @@
 this is a simple application using VueJS 2 with Laravel 5.5 that shows<br>
 some data from Bundesliga using the Api provided by [OpenLigaDb](https://www.OpenLigaDB.de)
 
-### running 
+## requirements
+- php >= 7.0
+- composer
+
+### clonning and installing
+first clone the application
+```bash
+git clone https://github.com/MichaelKlemersson/fullstack-challenge-bundesliga.git
+
+cd fullstack-challenge-bundesliga
+composer install
+```
+
+copy the .env.example to .env and generate a new key
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### running
 just start artisan from the root path and see [http://localhost:8000](http://localhost:8000)
 ```bash
 php artisan serve
