@@ -41,7 +41,7 @@ trait CacheApi
      * @param integer $minutes
      * @return void
      */
-    public function putInCache(string $key, $content, $minutes = 2)
+    public function putInCache(string $key, $content, $minutes = 15)
     {
         Cache::put($key, $content, (Carbon::now()->addMinutes($minutes)));
     }

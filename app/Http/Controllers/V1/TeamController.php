@@ -25,15 +25,16 @@ class TeamController extends Controller
             'session' => 'required',
         ]);
 
-        return response()->json(
-            $this->getFromCache(
-                "teams-from-league-" . $request->input('team') . '-' . $request->input('session'),
-                $this->apiService->getTeamMatches(
-                    $request->input('league'),
-                    $request->input('session')
-                )
-            )
-        );
+        $cacheKey = "teams-from-league-" . $request->input('league') . '-' . $request->input('session');
+        
+        if (!$this->isCached($cacheKey)) {
+            $this->putInCache($cacheKey, $this->apiService->getAllTeamsFromLeague(
+                $request->input('league'),
+                $request->input('session')
+            ), 60);
+        }
+
+        return response()->json($this->getFromCache($cacheKey));
     }
 
     public function allMatchesFromTeam(Request $request)

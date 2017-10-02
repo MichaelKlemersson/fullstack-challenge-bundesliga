@@ -4,12 +4,13 @@ const routes = [
         component: require('../components/league/BcNextMatches')
     },
     {
-        path: '/teams',
-        component: require('../components/team/BcListTeams')
+        path: '/leagues/:id',
+        component: require('../components/league/BcLeagueMatches')
     },
     {
-        path: '/leagues',
-        component: require('../components/league/BcLeagues')
+        name: 'leagueTeams',
+        path: '/teams',
+        component: require('../components/team/BcTeams')
     }
 ]
 

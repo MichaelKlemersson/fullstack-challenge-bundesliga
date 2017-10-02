@@ -105,4 +105,17 @@ class BundesligaApiServiceTest extends TestCase
         $this->assertArrayHasKey('matchID', $match);
         $this->assertFalse($match['matchIsFinished']);
     }
+
+    public function testFetchTeamResultsInLeague()
+    {
+        $teamId = 6;
+        $leagueSession = 2017;
+        $currentLeagueGroup = 7;
+        $apiService = new BundesligaApiService();
+        $results = $apiService->getTeamResultsInLeague($this->league, $leagueSession, $teamId, range(1, $currentLeagueGroup));
+
+        $this->assertNotNull($results);
+        $this->assertArrayHasKey('team', $results);
+        $this->assertEquals($teamId, $results['team']);
+    }
 }

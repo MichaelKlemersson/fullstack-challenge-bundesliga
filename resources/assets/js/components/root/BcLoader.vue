@@ -1,7 +1,7 @@
 <template>
-    <div class="text-center fake-loader">
+    <div class="text-center fake-loader" v-show="showLoading">
         <div class="clearfix"></div>
-        <i v-show="showLoading" class="fa fa-refresh fa-spin fa-3x fa-fw margin-bottom"></i>
+        <i class="fa fa-refresh fa-spin fa-3x fa-fw margin-bottom"></i>
     </div>
 </template>
 

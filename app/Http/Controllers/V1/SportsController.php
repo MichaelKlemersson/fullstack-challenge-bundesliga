@@ -24,7 +24,7 @@ class SportsController extends Controller
         $cacheKey = "available-sports";
 
         if (!$this->isCached($cacheKey)) {
-            $this->putInCache($cacheKey, $this->apiService->getAvailabeSports(), 30);
+            $this->putInCache($cacheKey, $this->apiService->getAvailabeSports(), 60);
         }
 
         return $this->makeApiResponse($this->getFromCache($cacheKey));
@@ -35,7 +35,7 @@ class SportsController extends Controller
         $cacheKey = "default-sport";
 
         if (!$this->isCached($cacheKey)) {
-            $this->putInCache($cacheKey, collect($this->apiService->getAvailabeSports(), 60)
+            $this->putInCache($cacheKey, collect($this->apiService->getAvailabeSports(), 120)
                 ->filter(function ($sport) {
                     return $sport['sportsID'] == 1;
                 })

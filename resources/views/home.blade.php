@@ -15,6 +15,7 @@
         <div id="app">
             <app-main></app-main>
         </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.js"></script>
         <script src="{{ asset('js/app.js') }}"></script>
     </body>
 </html>
